@@ -5,17 +5,21 @@ services:
   app-db:
     container_name: app-db
     image: mariadb:10.7.1
-    # platform: linux/x86_64 #垃圾Ｍ1
+    #M1，需要設定環境參數
+    # platform: linux/x86_64 
+    # 啟動選項
     restart: always
+    # 區塊
     volumes:
       - mariadb-data:/var/lib/mysql
       - ./sqls:/docker-entrypoint-initdb.d
+    # 初始化選項  
     environment: 
       MARIADB_ROOT_PASSWORD : "123456"
       MYSQL_DATABASE: demo
       MYSQL_USER: jason
       MYSQL_PASSWORD: "123456"
-    # 映射到外埠  
+    # 映射到外部port  
     ports:
       - "3306:3306"
     networks:
@@ -26,9 +30,11 @@ services:
     depends_on:
       - app-db
     image: demo-0.0.1-snapshot.jar
+    # 映射到外部port 
     build:
       context: ./
       dockerfile: Dockerfile
+    # 對應專案監聽服務與映射外部port  
     ports:
       - "8890:8890"
     # environment: # Pass environment variables to the service
